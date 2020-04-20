@@ -211,8 +211,10 @@ body {
 }
 
 .todo:empty:after {
-    content: 'Нет задач';
+    content: 'Нет задач. Добавьте их через графу "какие планы"!';
     margin: 15px 0 0 0;
+    color: #4682b4;
+    font-size: 20px;
 }
 
 .todo-completed:empty:after {

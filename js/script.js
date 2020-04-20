@@ -9,25 +9,20 @@ todoList = document.querySelector('.todo-list'),
 // выполненные дела
 todoCompleted = document.querySelector('.todo-completed');
 
+
+let arrayItems = localStorage.getItem('todo') ? JSON.parse(localStorage.getItem('todo')) : [];
+
 // дела необходимо где-то хранить
 // для этого создаем массив
-const todoData = [
-    // для примера добавляем сюда два дела
-    {
-        value: 'Сварить кофе',
-        completed: false,
-    },
-    {
-        value: 'Помыть посуду',
-        completed: true,
-    }
-];
+const todoData = [];
 
 // пишем функцию, которая будет рендерить (добавлять) эти дела
 const render = function() {
     // очищаю строки от предыдущих дел, которые здесь были
     todoList.textContent = '';
     todoCompleted.textContent = '';
+    headerInput.value = '';
+
     // функция должна перебирать todoData
     todoData.forEach(function(item){
         // item — это целый объект из todoData (в фигурных скобках)
@@ -71,7 +66,21 @@ const render = function() {
             // чтобы это сработало, надо вызвать функцию render();
             // да, вызвать эту функцию внутри себя
             render();
-        })
+        });
+
+        const todoRemove = li.querySelector('.todo-remove');
+        
+        // удаляю данные
+        todoRemove.addEventListener('click', function(){
+            todoData.pop();
+            li.remove(); 
+            localStorage.removeItem('todo');
+            });
+        
+
+        // записываем инфу в локал сторэдж
+        localStorage.setItem('todo', JSON.stringify(todoData));
+
     });
 };
 
@@ -93,12 +102,25 @@ todoControl.addEventListener('submit', function(event){
         // false — еще не готово
         completed: false,
     };
+
+    // если в верхнем инпуте пусто или пробелы...
+    // ...то останавливаем все
+    if (headerInput.value.trim() ==='') {
+        return;
+    }
+
     // добавляю в массив (todoData) новый объект (newTodo)
     // push — это "добавить"
     todoData.push(newTodo);
 
     // добавляю функцию render(), чтобы обновился список дел
     render();
+});
+
+// переключаю кнопки с галочкой
+arrayItems.forEach(function(item){
+    todoData.push(item);
+    
 });
 
 // запускаю рендер как только страница загрузилась
